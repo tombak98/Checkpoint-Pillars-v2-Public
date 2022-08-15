@@ -53,6 +53,24 @@ router.post('/', async(req,res,next) => {
   }
 })
 
+router.put('/:id', async(req,res,next) => {
+  try {
+    let [updatedRowCount, updatedUsers] = await User.update(req.body,{
+      where: {
+        id: req.params.id
+      },
+      returning: true
+    })
+    if (updatedRowCount > 0) {
+      res.status(200).send(updatedUsers[0])
+    } else {
+      res.status(404).send("No one here")
+    }
+  } catch(err) {
+    next(err)
+  }
+})
+
 router.delete('/:id', async(req,res,next) => {
   try {
     // Note to self, I've seen that isNaN isn't always reliable. Perhaps find a better
