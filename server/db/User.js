@@ -16,6 +16,24 @@ const User = db.define('user', {
     values: ['STUDENT', 'TEACHER'],
     defaultValue: 'STUDENT',
     allowNull: false,
+  },
+  isStudent: {
+    type: Sequelize.VIRTUAL,
+    get() {
+      return this.userType === 'STUDENT'
+    },
+    set(value) {
+      throw new Error('Don\'t try to set a isStudent value!')
+    }
+  },
+  isTeacher: {
+    type: Sequelize.VIRTUAL,
+    get() {
+      return this.userType === 'TEACHER'
+    },
+    set(value) {
+      throw new Error('Don\'t try to set a isTeacher value!')
+    }
   }
 });
 
