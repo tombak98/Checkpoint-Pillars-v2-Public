@@ -3,9 +3,30 @@ const db = require('./db');
 
 const User = db.define('user', {
   // Add your Sequelize fields here
-
+  name: {
+    type: Sequelize.STRING,
+    unique: true,
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    },
+  },
+  userType: {
+    type: Sequelize.ENUM,
+    values: ['STUDENT', 'TEACHER'],
+    defaultValue: 'STUDENT',
+    allowNull: false,
+  }
 });
 
+User.findUnassignedStudents = async function() {
+  return await User.findAll({
+    where: {
+      mentorId: null,
+      userType: 'STUDENT'
+    }
+  })
+}
 
 /**
  * We've created the association for you!
