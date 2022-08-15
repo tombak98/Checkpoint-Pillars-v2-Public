@@ -28,6 +28,18 @@ User.findUnassignedStudents = async function() {
   })
 }
 
+User.findTeachersAndMentees = async function() {
+  return await User.findAll({
+    where: {
+      userType: 'TEACHER',
+    },
+    include: {
+      model: User,
+      as: "mentees"
+    }
+  })
+}
+
 /**
  * We've created the association for you!
  *
