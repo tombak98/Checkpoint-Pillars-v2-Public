@@ -2,6 +2,7 @@ const router = require('express').Router();
 const {
   models: { User },
 } = require('../db');
+const { Op } = require('sequelize')
 
 /**
  * All of the routes in this are mounted on /api/users
@@ -17,6 +18,26 @@ const {
  */
 
 // Add your routes here:
+
+router.get('/', async(req,res,next) => {
+  try {
+    let searchTerm = req.query.name
+    if (searchTerm === null) {
+      next()
+    } else {
+      let users = await User.findAll({
+        where: {
+          name: {
+            [Op.iLike]: `%${searchTerm}%`
+          }
+        }
+      })
+      res.send(users)
+    }
+  } catch(err) {
+    next(err)
+  }
+})
 
 router.get('/unassigned', async(req,res,next) => {
   try {
