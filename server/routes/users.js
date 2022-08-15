@@ -36,6 +36,23 @@ router.get('/teachers', async(req,res,next) => {
   }
 })
 
+router.post('/', async(req,res,next) => {
+  try {
+    let [user, wasCreated] = await User.findOrCreate({
+      where: {
+        name: req.body.name,
+      }
+    })
+    if (wasCreated) {
+      res.status(201).send(user)
+    } else {
+      res.status(409).send("User with name already exists")
+    }
+  } catch(err) {
+    next(err)
+  }
+})
+
 router.delete('/:id', async(req,res,next) => {
   try {
     // Note to self, I've seen that isNaN isn't always reliable. Perhaps find a better
