@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const Sequelize = require('sequelize');
 const db = require('./db');
 
@@ -57,6 +58,40 @@ User.findTeachersAndMentees = async function() {
     }
   })
 }
+
+// deny update if try to make a student a mentor
+User.beforeUpdate(async(user) => {
+  let mentor = await User.findOne({
+    where: {
+      id: user.mentorId
+    }
+  })
+  if (mentor !== null && mentor.isStudent) {
+    throw new Error("Cannot assign a student a student mentor")
+  }
+})
+
+// deny update if you try to make someone a teacher, who has a mentor
+User.beforeUpdate(async(user) => {
+  if(!!user.mentorId && user.isTeacher) {
+    throw new Error("Cannot make someone who has a mentor a teacher!")
+  }
+})
+
+// deny update if you try to make someone a student, who has mentees
+User.beforeUpdate(async(user) => {
+  let mentees = await User.findAll({
+    where:{
+      mentorId: user.id
+    }
+  })
+  // Note to self: I don't know why the .hasMentees method isnt working or gives
+  // me an error, this is the best way I could figure out how to implement
+  // this hook
+  if (mentees.length !== 0 && user.isStudent) {
+    throw new Error("Cannot make someone who has mentees a student!")
+  }
+})
 
 /**
  * We've created the association for you!
