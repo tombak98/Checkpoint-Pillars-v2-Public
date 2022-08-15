@@ -1,6 +1,17 @@
+
+@keyframes fadein {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
 body {
   font-family: verdana;
+  background-image: url(./background.jpeg);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size:cover;
 }
+
 #content {
   display: flex;
 }
@@ -15,6 +26,14 @@ input {
   padding: 0.25rem;
 }
 
+#header {
+  display: flex;
+  margin: 0px;
+  padding: 0px 12px;
+  color: #fff;
+  background-color: rgba(35, 37, 161);
+}
+
 ul {
   padding: 0;
 }
@@ -25,6 +44,11 @@ li {
   border: solid 1px black;
   margin: 1rem;
   padding: 1rem;
+  animation-name: fadein;
+  animation-duration: 1s;
+  background-color: white;
+  border-radius: 1rem;
+  border-width: 3px;
 }
 
 li li {
@@ -46,4 +70,12 @@ li > * {
 
 #error {
   color: red;
+}
+
+/* if screen is too narrow, make them all columns */
+@media screen and (max-width: 850px) {
+  #content {
+    flex-direction: column;
+    align-items: center;
+  }
 }
